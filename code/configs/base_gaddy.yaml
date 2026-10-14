@@ -1,0 +1,90 @@
+# ============================================================================
+# base_gaddy.yaml  —  Gaddy-reproduction base/training/preprocess config.
+# Pairs with: configs/models/transformer_gaddy.yaml
+# Run:  python train.py --model transformer_gaddy --base configs/base_gaddy.yaml
+#
+# Faithful to Gaddy (silent_speech/recognition_model.py + architecture.py):
+#   raw-EMG input, 8x conv downsample, AdamW, lr 3e-4, weight_decay 0,
+#   no grad clip, 200 epochs.
+#
+# Approximated (this pipeline can't express it exactly):
+#   - LR schedule: Gaddy = linear warmup over 1000 STEPS + MultiStepLR
+#     milestones [125,150,175] x0.5. Here: cosine + EPOCH-based warmup
+#     (no MultiStep option, warmup is per-epoch not per-step).
+#   - Batching: Gaddy = size-aware sampler (~128k samples/batch) + grad-accum x2.
+#     Here: fixed batch_size, no accumulation knob -> effective batch is smaller.
+#   - Normalization: Gaddy = precomputed global feature normalizers; here = per-utterance.
+#
+# NOT fixable in config (remains your current behavior; needs CODE to match Gaddy):
+#   - Relative positional attention. You use absolute sinusoidal. (models/transformer.py)
+#   - Intermediate token targets. [CENSORED / PROPRIETARY] Proprietary target specification withheld.
+#   - n-gram LM in the decoder (Gaddy = KenLM beam). Decoding is separate from training.
+# ============================================================================
+
+dataset:
+  name: dvss
+  mode: silent            # NOTE: Gaddy trains on vocalized+silent; kept 'silent' (no 'both' mode here)
+  data_root: null
+  vocabulary_type: open_vocab   # Gaddy's 28% is open-vocabulary
+  require_text: true
+  require_emg: true
+  dvss_parallel_only: false
+  banlist_path: data/banlist.txt
+
+transform:
+  token_id_offset: 1
+  ignore_last_emg_channel: auto
+  drop_empty_tokens: true
+  # [CENSORED / PROPRIETARY] Target formulation parameter withheld.
+
+features:
+  feature_path: raw       # MATCHES Gaddy: raw EMG straight into the conv stem (no hand features)
+  frame_size: 32          # dead under feature_path: raw (only classical_features reads it)
+  frame_stride: 16        # dead under feature_path: raw
+  features:
+  - mav
+  - rms
+  - wl
+  - zc
+  add_deltas: 0           # Gaddy uses no deltas
+  sample_rate: 1000
+
+training:
+  seed: 7
+  split_seed: 42
+  sample_n: null
+  batch_size: 32          # GADDY: nominal batch (his flag default). Gaddy actually used a size-aware
+                          #        sampler + grad-accum x2 (not expressible). Lower to 16/8 if OOM.
+  shuffle: true
+  num_workers: 4
+  epochs: 200             # GADDY: fixed 200 epochs (was 500)
+  max_batches: null
+  val_max_batches: null
+  lr: 0.0003              # GADDY: 3e-4 (was 1e-3)
+  optimizer: adamw        # MATCHES Gaddy
+  scheduler: cosine       # GADDY-approx: closest to warmup+MultiStep (no MultiStep option here). (was plateau)
+  warmup_epochs: 5        # GADDY-approx: ~step-1000 warmup -> a few epochs (epoch-based here)
+  early_stopping_patience: 200   # GADDY: no early stopping; set >= epochs to effectively disable (was 30)
+  weight_decay: 0.0       # MATCHES Gaddy (l2=0)
+  grad_clip: 0.0          # MATCHES Gaddy (no clipping)
+  ctc_blank: 0            # index convention (Gaddy puts blank last); functionally identical
+  ctc_reduction: mean
+  ctc_zero_infinity: true
+  blank_bias_init: 0      # GADDY: no blank-bias init (was 1; that was your own trick — harmless to re-enable)
+  train_ratio: 0.8
+  val_ratio: 0.1
+  test_ratio: 0.1
+  split_shuffle: true
+  device: cuda            # VM GPU run. Set 'cpu' or 'mps' only for a quick local smoke test.
+  output_dir: models/runs
+  run_name: null          # null -> timestamped unique dir (e.g. 20260625_..._transformer)
+  save_optimizer: true
+  deterministic: false
+  deterministic_warn_only: true
+  cudnn_benchmark: false
+  use_banlist: true
+
+# [CENSORED / PROPRIETARY INTELLECTUAL PROPERTY]
+# Preprocessing, normalization, and signal regularization parameters withheld.
+preprocess:
+  # [CENSORED] Preprocessing parameters withheld for commercial R&D.

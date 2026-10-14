@@ -1,0 +1,16 @@
+# Portable conda environment for the sEMG silent-speech pipeline.
+#
+#     conda env create -f environment.yml
+#     conda activate lmu_emg
+#
+# The exact macOS/ARM environment the results were produced in is preserved in
+# environment.lock-osx-arm64.yml. That file is a full conda export with
+# platform-specific build hashes and will NOT solve on Linux — use this one.
+name: lmu_emg
+channels:
+  - conda-forge
+dependencies:
+  - python=3.13
+  - pip
+  - pip:
+      - -r requirements.txt

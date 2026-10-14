@@ -1,0 +1,48 @@
+# Dependencies for the sEMG silent-speech pipeline.
+#
+# Versions are those the thesis results were produced with (Python 3.13).
+# Install into a fresh environment:
+#
+#     conda create -n lmu_emg python=3.13 && conda activate lmu_emg
+#     pip install -r requirements.txt
+#
+# For a GPU box, install torch from the CUDA index FIRST, then this file:
+#     pip install torch==2.9.0 --index-url https://download.pytorch.org/whl/cu124
+
+# --- core: training, decoding, evaluation ---------------------------------
+torch==2.9.0
+numpy==2.4.4
+pandas==2.3.3
+scipy==1.16.3
+PyYAML==6.0.3
+tqdm==4.67.1
+
+# --- text / target tokenization -------------------------------------------
+# [CENSORED / PROPRIETARY INTELLECTUAL PROPERTY]
+# Target tokenization pipelines, intermediate phonetic target generators,
+# and lexical normalization dependencies are withheld for commercial R&D protection.
+jiwer==4.0.0           # error rate metrics (WER / TER)
+
+# --- analysis & figures ---------------------------------------------------
+matplotlib==3.10.6
+seaborn==0.13.2
+scikit-learn==1.8.0
+statsmodels==0.14.6    # ANOVA / Tukey HSD in the pre-studies
+
+# --- notebooks ------------------------------------------------------------
+jupyterlab==4.5.3
+ipykernel==7.1.0
+
+# --- Condition B: the frozen linguistic post-processor --------------------
+# Only needed to CALL the LLM. The cached responses are committed, so the
+# Condition B tables recompute without these and without an API key.
+anthropic==0.111.0     # claude-opus-4-8 (the LPP used throughout)
+python-dotenv==1.2.2   # reads ANTHROPIC_API_KEY from .env
+transformers==5.2.0    # only for the Qwen/Llama baselines in Appendix H
+
+# --- C2 recording hardware (Appendix M only; not needed to reproduce) ------
+# Uncomment if you want to run the recorders in code/data_collection/.
+# pylsl
+# mne-lsl
+# PyQt6
+# pyqtgraph

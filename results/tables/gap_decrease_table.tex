@@ -1,0 +1,16 @@
+\begin{table}
+\caption{Train--validation gap at the best-validation checkpoint, before and after the Prestudy~2 regularization effort ($RF^*_{\text{both}}=383$~ms). $\Delta$ is the absolute decrease (before $-$ after).}
+\label{tab:gap_decrease}
+\begin{tabular}{llrrrrrrrrr}
+\toprule
+Architecture & Granularity & Metric & loss gap before & loss gap after & Δ loss gap & metric gap before (pts) & metric gap after (pts) & Δ metric gap (pts) & val before (%) & val after (%) \\
+\midrule
+CNN & word & WER & 1.561000 & 1.216000 & 0.345000 & 44.600000 & 32.700000 & 11.900000 & 77.900000 & 56.800000 \\
+CNN & token & TER & 0.930000 & 0.253000 & 0.677000 & 30.000000 & 17.000000 & 13.000000 & 40.700000 & 23.600000 \\
+biLSTM & word & WER & 0.262000 & 0.219000 & 0.044000 & 0.400000 & 0.300000 & 0.100000 & 95.100000 & 86.000000 \\
+biLSTM & token & TER & 1.261000 & 0.511000 & 0.750000 & 21.500000 & 9.800000 & 11.700000 & 53.500000 & 66.900000 \\
+Transformer & word & WER & 1.425000 & 1.609000 & -0.183000 & 29.600000 & 25.600000 & 4.000000 & 85.700000 & 76.900000 \\
+Transformer & token & TER & 0.879000 & 0.556000 & 0.324000 & 29.000000 & 17.900000 & 11.000000 & 43.500000 & 27.100000 \\
+\bottomrule
+\end{tabular}
+\end{table}

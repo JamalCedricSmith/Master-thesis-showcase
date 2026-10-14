@@ -1,0 +1,20 @@
+% Parameter decomposition table [CENSORED: Sub-module layer splits withheld]
+\begin{table}[htbp]
+    \centering
+    \caption{Parameter decomposition by model. The encoder total is the quantity held constant by the parameter budget; the CTC head scales as $|V| \cdot (d_{\text{out}} + 1)$ and reflects the output vocabulary rather than modelling capacity.}
+    \label{tab:param_decomposition}
+    \begin{tabular}{llrrrr}
+        \toprule
+        \textbf{Architecture} & \textbf{Target} & $\mathbf{|V|}$ & $\mathbf{d_{\text{out}}}$ & \textbf{CTC head} & \textbf{Encoder Total} \\
+        \midrule
+        1D CNN & Token (Intermediate) & $40$ & $256$ & $10{,}280$ & $322{,}176$ \\
+        1D CNN & Word & $4425$ & $256$ & $1{,}137{,}225$ & $322{,}176$ \\
+        \midrule
+        biLSTM & Token (Intermediate) & $40$ & $118$ & $4{,}760$ & $324{,}235$ \\
+        biLSTM & Word & $4425$ & $118$ & $526{,}575$ & $324{,}235$ \\
+        \midrule
+        Transformer & Token (Intermediate) & $40$ & $96$ & $3{,}880$ & $327{,}744$ \\
+        Transformer & Word & $4425$ & $96$ & $429{,}225$ & $327{,}744$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}

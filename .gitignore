@@ -1,0 +1,27 @@
+# Model weights & training run artifacts — withheld for IP and commercial R&D protection
+*.pt
+*.pth
+*.ckpt
+*.npy
+*.npz
+
+# All experiment runs (configs, checkpoints, logs, cached predictions)
+code/models/runs/
+**/runs/
+
+# Feature / inference caches
+code/decode/cache/
+code/models/cache/
+
+# Raw corpora
+DVSS/
+CSL-EMG_Array/
+
+# Secrets
+.env
+
+# Python / OS noise
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store

@@ -1,0 +1,14 @@
+\begin{table}[h]
+\centering
+\caption{Token-level Out-of-Vocabulary (OOV) rates across splitting methodologies on $C_{1,\text{open}}$. The random baseline follows prior work in drawing 100 validation and 200 test utterances at random. Both aggregates report $\mu \pm \sigma$ across 10 random permutations.}
+\label{tab:oov_analysis}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Splitting Protocol} & \textbf{Val Word OOV (\%)} & \textbf{Val Token OOV (\%)} & \textbf{Test Word OOV (\%)} & \textbf{Test Token OOV (\%)} \\
+\midrule
+Standard Random (100/200) & $8.4 \pm 0.8$ & $0.0 \pm 0.0$ & $8.4 \pm 0.4$ & $0.0 \pm 0.0$ \\
+Banpool Protocol (225/225) & $15.0 \pm 0.4$ & $0.0 \pm 0.0$ & $15.1 \pm 0.4$ & $0.0 \pm 0.0$ \\
+Banpool (\texttt{seed\_split} = 42) & 15.8 & 0.0 & 14.3 & 0.0 \\
+\bottomrule
+\end{tabular}
+\end{table}

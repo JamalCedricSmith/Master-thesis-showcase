@@ -1,0 +1,85 @@
+# =============================================================================
+# Experiment 1 (RQ1) — inductive bias x decoding granularity x speaking mode
+#
+# Every parameter that trained the 36 Experiment-1 models. The values are the
+# winners promoted by Pre-Study 1 (receptive field calibration) and Pre-Study 2
+# (architectural hyperparameters, regularisation). Recording them here
+# means the experiment can be read and re-run without re-running the searches.
+#
+# Merge order:  configs/base.yaml  <-  shared  <-  arms.<arch>_<granularity>
+# Anything not named here keeps its base.yaml value.
+# =============================================================================
+
+name: exp1
+title: "Architectural bias and speaking mode"
+runs: 36            # 3 architectures x 2 granularities x 2 modes x 3 seeds
+
+# ---- the factorial grid -------------------------------------------------
+grid:
+  architectures: [cnn, lstm, transformer]   # local / recency / global bias
+  granularities: [token, word]              # [CENSORED] proprietary intermediate tokenization vs word
+  modes: [voiced, silent]
+  seeds: [1, 2, 3]
+
+# ---- settings common to all 36 runs -------------------------------------
+shared:
+  dataset:
+    name: DVSS
+    vocabulary_type: open_vocab
+    dvss_parallel_only: true      # paired cross-modal evaluation only
+    require_text: true
+    require_emg: true
+    banlist_path: data/banlist.txt
+
+  features:
+    sample_rate: 1000
+
+  # [CENSORED / PROPRIETARY INTELLECTUAL PROPERTY] Preprocessing & normalisation withheld.
+  preprocess: {}
+
+  training:
+    optimizer: adamw
+    epochs: 500
+    early_stopping_patience: 30
+    split_seed: 42
+    deterministic: false
+    output_dir: models/runs/05 Experiment 1
+
+    # Banpool (unseen-word) protocol: train on the unbanned utterances; the
+    # banned pool is split 50/50 into val/test. val_ratio must stay > 0 so
+    # checkpointing and early stopping still have a validation signal.
+    use_banlist: true
+    train_ratio: 0.0
+    val_ratio: 0.5
+    test_ratio: 0.5
+
+# ---- neural architecture components -------------------------------------
+# [CENSORED / PROPRIETARY INTELLECTUAL PROPERTY]
+# Model layer parameters, receptive field dilations, kernel dimensions, and topologies
+# are withheld for commercial R&D protection.
+
+# ---- per-arm hyperparameters (Pre-Study 2 winners) ----------------------
+# [CENSORED / PROPRIETARY INTELLECTUAL PROPERTY]
+# Architectural backbone layer specs, intermediate tokenization targets,
+# and proprietary regularisation parameters are withheld for commercial R&D protection.
+arms:
+  cnn_token:
+    # [CENSORED] Proprietary intermediate target & CNN parameters withheld.
+  cnn_word:
+    # [CENSORED] CNN word-level baseline parameters withheld.
+  lstm_token:
+    # [CENSORED] Proprietary intermediate target & biLSTM parameters withheld.
+  lstm_word:
+    # [CENSORED] biLSTM word-level baseline parameters withheld.
+  transformer_token:
+    # [CENSORED] Proprietary intermediate target & Transformer parameters withheld.
+  transformer_word:
+    # [CENSORED] Transformer word-level baseline parameters withheld.
+
+# ---- Condition B: the frozen linguistic post-processor ------------------
+lpp:
+  model: claude-opus-4-8
+  beams: 5              # K = 5 candidates handed to the LPP
+  subset: 20            # sentences scored per run (drawn in seeded waves of 10)
+  group: opus_v2        # subdirectory the cached responses live in
+  branch: token         # [CENSORED] intermediate candidate branch

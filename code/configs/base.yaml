@@ -1,0 +1,66 @@
+dataset:
+  name: dvss
+  mode: silent
+  data_root: null
+  vocabulary_type: open_vocab
+  require_text: true
+  require_emg: true
+  dvss_parallel_only: false
+  banlist_path: data/banlist.txt
+
+# [CENSORED / PROPRIETARY INTELLECTUAL PROPERTY]
+# Target tokenization specifications and intermediate representations are withheld.
+transform:
+  token_id_offset: 1
+  ignore_last_emg_channel: auto
+  drop_empty_tokens: true
+
+features:
+  feature_path: raw
+  frame_size: 32
+  frame_stride: 16
+  features:
+  - mav
+  - rms
+  - wl
+  - zc
+  add_deltas: 0
+  sample_rate: 1000
+
+training:
+  seed: 7
+  split_seed: 42
+  sample_n: null
+  batch_size: 8 
+  shuffle: true
+  num_workers: 4
+  epochs: 500
+  max_batches: null
+  val_max_batches: null
+  lr: 0.001 
+  optimizer: adamw
+  scheduler: plateau
+  early_stopping_patience: 30
+  weight_decay: 0.0
+  grad_clip: 0.0
+  ctc_blank: 0
+  ctc_reduction: mean
+  ctc_zero_infinity: true
+  blank_bias_init: 1
+  train_ratio: 0.8
+  val_ratio: 0.1
+  test_ratio: 0.1
+  split_shuffle: true
+  device: cpu
+  output_dir: models/runs
+  run_name: null
+  save_optimizer: true
+  deterministic: false
+  deterministic_warn_only: true
+  cudnn_benchmark: false
+  use_banlist: true
+
+# [CENSORED / PROPRIETARY INTELLECTUAL PROPERTY]
+# Preprocessing, normalization methods, and signal conditioning parameters are withheld.
+preprocess:
+  # [CENSORED] Preprocessing parameters withheld for commercial R&D.
